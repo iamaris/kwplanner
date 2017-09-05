@@ -22,7 +22,7 @@ pip install -r requirements.txt
 python kwplanner -country_code US -language English -keyword_file ~/keywords.txt 
 ```
 
-The result will be saved inside the ```kwplanner`` folder.
+The result will be saved inside the ```kwplanner``` folder.
 
 ```
 Extra parameters:
