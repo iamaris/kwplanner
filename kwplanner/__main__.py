@@ -10,6 +10,8 @@ import time
 import os
 import re
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 __author__ = "aris"
 __license__ = "MIT License"
@@ -127,7 +129,7 @@ class keyword_planner(object):
         df.to_csv(self._output_name, index=False)
         
     def get_data(self):
-        return pd.read_csv(self._keyword_file, '\t', header=None, warn_bad_lines=True, error_bad_lines=False)
+        return pd.read_csv(self._keyword_file, '\t', encoding = 'utf8', header=None, warn_bad_lines=True, error_bad_lines=False)
     
     def run(self):
         data = self.get_data()
@@ -163,15 +165,14 @@ def main():
     parser.add_argument('-max_kw', default=700, help='The maximum number of keywords per API call. Default value is 700.')
     parser.add_argument('-show_languages', action='store_true')
     parser.add_argument('-show_countries', action='store_true')
+    parser.add_argument('-test', action='store_true')
     args = parser.parse_args()
 
-    print(args)
-
-    if args.show_languages == True:
+    if args.show_languages:
         for i in sorted(languages):
             print (str(i), languages[i])
 
-    if args.show_countries == True:
+    if args.show_countries:
         country_dict = cn['Name'].to_dict()
         for i in sorted(country_dict):
             print(i, country_dict[i])
@@ -184,8 +185,17 @@ def main():
                          auth_file=args.auth_file,  
                          sleep_duration=args.sleep_duration,
                          max_number_of_keywords=args.max_kw)
-    kw.run()
-
+    
+    if args.test:
+        print('################################################')
+        print('Parameters:')
+        print(', '.join("%s: %s" % i for i in vars(kw).items()))
+        print('################################################')
+        print('Running test:')
+        print(kw.get_volume(['rock&roll', 'indeed', 'jobs', 'niño']))
+        print('################################################')
+    else:
+        kw.run()
 
 
 if __name__ == '__main__':
