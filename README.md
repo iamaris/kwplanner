@@ -17,7 +17,7 @@ pip install -r requirements.txt
 3) Place the credentials file (auth.yaml) in your home directory. The script assumes that the file is named ```auth.yaml``` and is located in the home directory. You can use a different name and location but you have to input that information every time you run the script.
 
 
-4) Run the program. For example, you want to check the __US__ volume estimates of the __English__ keywords in a file named __keywords.txt__ and located in your home directory.
+4) Run the program. For example, you want to check the __US__ volume estimates of the __English__ keywords in a file named __keywords.txt__ and located in your home directory. This also assumes that you did step 3.
 ```
 python kwplanner -country_code US -language English -keyword_file ~/keywords.txt 
 ```
