@@ -89,7 +89,7 @@ class keyword_planner(object):
         """
         final = {}
         error = []
-        for i in xrange(0, len(data), self._max_number_of_keywords):     
+        for i in range(0, len(data), self._max_number_of_keywords):     
             kw = data[i:i+self._max_number_of_keywords]
             try:
                 tmp = self.get_volume(kw) 
