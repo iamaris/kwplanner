@@ -1,6 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import argparse
 from googleads import adwords
 import json
@@ -9,9 +7,6 @@ from datetime import datetime
 import time
 import os
 import re
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 __author__ = "aris"
 __license__ = "MIT License"
