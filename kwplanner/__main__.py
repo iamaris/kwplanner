@@ -6,10 +6,9 @@ import pandas as pd
 from datetime import datetime
 import time
 
-
 __author__ = "aris"
 __license__ = "MIT License"
-__version__ = "0.9.1"
+__version__ = "1.0.0"
 
 class keyword_planner(object):
     def __init__(self,
