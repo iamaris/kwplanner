@@ -1,2 +1,2 @@
-googleads==7.0.0
-pandas==0.20.3
+googleads==27.0.0
+pandas==1.2.2
