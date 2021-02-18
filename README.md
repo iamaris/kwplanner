@@ -38,3 +38,12 @@ Extra parameters:
   -test                 : Add this to run a test.
 ```
 
+
+## Debugging
+If you get an error message like the following:
+```
+    raise googleads.errors.GoogleAdsValueError(
+googleads.errors.GoogleAdsValueError: Unrecognized version for the AdWords API. Given: v201609 Supported: dict_keys(['v201809'])
+```
+You need to replace the version number in conf/version.json to v201809 from v201609. 
+

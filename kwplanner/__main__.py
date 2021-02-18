@@ -1,21 +1,14 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import argparse
 from googleads import adwords
 import json
 import pandas as pd
 from datetime import datetime
 import time
-import os
-import re
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 __author__ = "aris"
 __license__ = "MIT License"
-__version__ = "0.9.1"
+__version__ = "1.0.0"
 
 class keyword_planner(object):
     def __init__(self,
@@ -30,10 +23,15 @@ class keyword_planner(object):
         self._country_code = country_code
         self._language = language
         self._keyword_file = keyword_file
-        self._output_name=output_name or 'result_'+str(datetime.now()).replace(' ','_')+'.txt'
+        self._output_name = output_name or 'result_'+str(datetime.now()).replace(' ','_')+'.txt'
         self._sleep_duration = sleep_duration
         self._max_number_of_keywords = max_number_of_keywords
-    
+
+    def get_version(self):
+        with open('./conf/version.json', 'r') as readfile:
+            data = json.load(readfile)
+        return data["version"]
+
     def get_language_code(self, language):
         with open('./conf/languagecodes.json', 'r') as readfile:
             lang = json.load(readfile)
@@ -47,10 +45,11 @@ class keyword_planner(object):
     
     def get_volume(self, keywords):
         """ keywords is a list of keywords """
-        keywords = filter(None, keywords)
+
+        keywords = list(filter(None, keywords))
         language_code = self.get_language_code(self._language)
         country_id = self.get_country_id(self._country_code)
-        targeting_idea_service = self._client.GetService('TargetingIdeaService', version='v201609')
+        targeting_idea_service = self._client.GetService('TargetingIdeaService', version=self.get_version())
 
         selector = {
             'searchParameters': [
@@ -78,33 +77,29 @@ class keyword_planner(object):
 
         page = targeting_idea_service.get(selector)
         return_data = {}
-        try:
-            for result in page['entries']:
-                attributes = {}
-                for attribute in result['data']:
-                    attributes[attribute['key']] = getattr(attribute['value'], 'value', '0')
-                return_data[attributes['KEYWORD_TEXT']] = int(attributes['SEARCH_VOLUME'])
-        except Exception as e:
-            print(e.__doc__)
-            print(e.message)
+        for result in page['entries']:
+            data = result['data']
+            return_data[data[0]['value']['value']] = int(data[1]['value']['value'] or 0)
         return return_data
     
+
+
     def get_estimate(self, data):
         """ data is a list of queries
         """
         final = {}
         error = []
-        for i in xrange(0, len(data), self._max_number_of_keywords):     
+        for i in range(0, len(data), self._max_number_of_keywords):     
             kw = data[i:i+self._max_number_of_keywords]
             try:
                 tmp = self.get_volume(kw) 
             except Exception as e:
-                print(e.message)
+                print(e)
                 time.sleep(self._sleep_duration)
                 try:
                     tmp = self.get_volume(kw) 
                 except Exception as e:
-                    print(e.message)
+                    print(e)
                     error.extend(kw)
                     tmp = {}
                     time.sleep(self._sleep_duration)
